@@ -3,10 +3,8 @@ import random
 import constants
 
 
-TOTAL_KANJI = 2200
-
 def main():
-    generate_files()
+    check_files_exist()
     to_study = load_json_file("to-study.json")
     studied = load_json_file("studied.json")
     edited = False
@@ -38,7 +36,7 @@ def main():
                 elif get_kanji_choice == "s":
                     continue
                 elif get_kanji_choice == "q":
-                    pause()
+                    print()
                     break
                 else:
                     print("Sorry, please try again.")
@@ -49,6 +47,17 @@ def main():
                 save(to_study, studied)
             print("Goodbye =)")
             return
+
+
+def check_files_exist():
+    # Create files if they don't exist
+    try:
+        f1 = open("to-study.json")
+        f2 = open("studied.json")
+        f1.close()
+        f2.close()
+    except FileNotFoundError:
+        generate_files()
 
 
 def load_json_file(file_name):
@@ -67,10 +76,8 @@ def save(to_study, studied):
         json.dump(studied, f, ensure_ascii=False, indent=4)
 
 
-def pause():
-    input()
-
 def print_intro_prompt():
+    print("=== MAIN MENU ===")
     print("What do you want to do?")
     print("    c) Get number of kanji remaining")
     print("    g) Get a random kanji index")
@@ -78,7 +85,8 @@ def print_intro_prompt():
 
 
 def print_get_kanji_prompt(kanji_index):
-    print(f"\nKanji: {kanji_index}")
+    print("\n=== RANDO KANJI ===")
+    print(f"Kanji: {kanji_index}")
     print("    a) Add to studied")
     print("    s) Skip")
     print("    q) Quit")
@@ -87,7 +95,7 @@ def print_get_kanji_prompt(kanji_index):
 def generate_files():
     # 1 -> 2200
     kanji_indices = list(range(1, 2200 + 1))
-    
+
     with open("to-study.json", "w", encoding="utf-8") as f:
         json.dump(kanji_indices, f, ensure_ascii=False, indent=4)
     
@@ -95,7 +103,7 @@ def generate_files():
         json.dump([], f, ensure_ascii=False, indent=4)
 
 
-def get_first_char_lower(text):
-    return lower(text)[0]
+def pause():
+    input()
 
 main()
