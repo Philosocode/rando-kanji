@@ -4,16 +4,26 @@ import random
 
 # Custom Modules
 import constants
-import file_handler
+from file_handler import (
+    check_for_missing_files,
+    generate_missing_files,
+    get_study_files,
+    validate_study_files
+)
 
 
 def main():
-    setup()
+    # Validate study files
+    missing_files = check_for_missing_files()
+    if len(missing_files) == 0:
+        validate_study_files()
+    elif len(missing_files) > 0:
+        generate_missing_files()
+    
+    to_study, studied = get_study_files()
 
     return
 
-    to_study = load_json_file("to_study.json")
-    studied = load_json_file("studied.json")
     edited = False
 
     while True:
@@ -34,25 +44,6 @@ def main():
                 save(to_study, studied)
             print("\nGoodbye =)")
             exit(0)
-
-
-def setup():
-    # Check that `studied.json` and `to-study.json` exist
-    # If they don't, create them
-    missing_files = file_handler.check_files_exist("to_study.json", "studied.json")
-
-    # Both files exist. Good to go
-    if len(missing_files) == 0: 
-        return
-
-    # Missing both. Create them them
-    if len(missing_files) == 2:
-        file_handler.create_study_files()
-        return
-    
-    # Missing one of them. Use existing file to re-create the missing one
-    if len(missing_files) == 1:
-        file_handler.generate_missing_file(missing_files[0])
 
 
 def handle_show_remaining(studied):
@@ -83,11 +74,6 @@ def handle_get_kanji(to_study, studied):
             print("Sorry, please try again.")
 
 
-def load_json_file(file_name):
-    with open(file_name, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
 def save(to_study, studied):
     to_study.sort()
     studied.sort()
@@ -102,8 +88,8 @@ def save(to_study, studied):
 def print_intro_prompt():
     print("=== MAIN MENU ===")
     print("What do you want to do?")
-    print("    c) Get number of kanji remaining")
-    print("    g) Get a random kanji index")
+    print("    c) Get count of remaining kanji")
+    print("    r) Get a random kanji index")
     print("    q) Quit")
 
 
