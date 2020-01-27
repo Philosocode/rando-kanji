@@ -18,9 +18,11 @@ def main():
     if len(missing_files) == 0:
         validate_study_files()
     elif len(missing_files) > 0:
-        generate_missing_files()
+        generate_missing_files(missing_files)
     
     to_study, studied = get_study_files()
+    print(f"to_study: {to_study}")
+    print(f"studied: {studied}")
 
     return
 

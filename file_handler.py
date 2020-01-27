@@ -1,6 +1,12 @@
 #!/usr/bin/python
 import json
-from constants import TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI
+import os
+from constants import (
+    TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI
+)
+from validators import (
+    has_out_of_range_indices
+)
 
 # PUBLIC
 def check_for_missing_files():
@@ -14,6 +20,7 @@ def generate_missing_files(missing_files):
     else:
         _create_study_files()
 
+
 def get_study_files():
     to_study = _load_json_file(TO_STUDY_FILE)
     studied = _load_json_file(STUDIED_FILE)
@@ -26,18 +33,32 @@ def validate_study_files():
     to_study, studied = get_study_files()
 
     for n in to_study:
-        if n < 0 or n > 2200: 
+        if n < 0 or n > 2200:
             return _create_study_files()
 
     for n in studied:
         if n < 0 or n > 2200:
             return _create_study_files()
-    
-    all_indices_unique = list(set(to_study) | set(studied))
 
+    to_study_unique_indices = list(set(to_study))
+    studied_unique_indices = list(set(studied))
+
+    # Check for duplicate indices in each file
+    if len(to_study) + len(studied) != TOTAL_KANJI:
+        _delete_file(STUDIED_FILE)
+        _create_json_file(TO_STUDY_FILE, to_study_unique_indices)
+        _generate_missing_file(STUDIED_FILE)
+
+    # No common index found in both files: good to go
+    if len(to_study_unique_indices) + len(studied_unique_indices) == TOTAL_KANJI:
+        return
+    
     # There was 1 or more index in both files... not good
-    if len(all_indices_unique) != TOTAL_KANJI:
-        return _create_study_files()
+    # Re-create `studied` based on `to_study`
+    _delete_file(STUDIED_FILE)
+    _create_json_file(TO_STUDY_FILE, to_study_unique_indices)
+    _generate_missing_file(STUDIED_FILE)
+    return
 
 
 # PRIVATE
@@ -55,10 +76,12 @@ def _check_files_exist(*file_names):
 
     return not_found
 
+
 def _create_json_file(file_name, data):
     """ Create a JSON file with data passed """
     with open(file_name, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+        print(f"CREATED: {file_name}")
 
 
 def _create_kanji_indices():
@@ -71,6 +94,11 @@ def _create_study_files():
     kanji_indices = _create_kanji_indices()
     _create_json_file(TO_STUDY_FILE, kanji_indices)
     _create_json_file(STUDIED_FILE, [])
+
+
+def _delete_file(file_name):
+    os.remove(file_name)
+    print(f"DELETED: {file_name}")
 
 
 def _generate_missing_file(missing_file_name):
