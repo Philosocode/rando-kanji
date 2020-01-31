@@ -5,7 +5,7 @@ from constants import (
     TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI
 )
 from validators import (
-    has_out_of_range_indices
+    has_valid_indices
 )
 
 # PUBLIC

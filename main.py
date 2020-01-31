@@ -21,8 +21,10 @@ def main():
         generate_missing_files(missing_files)
     
     to_study, studied = get_study_files()
-    print(f"to_study: {to_study}")
-    print(f"studied: {studied}")
+    print("=== to_study ===")
+    print_list(to_study)
+    print("=== studied ===")
+    print_list(studied)
 
     return
 
@@ -80,10 +82,10 @@ def save(to_study, studied):
     to_study.sort()
     studied.sort()
 
-    with open("to-study.json", "w", encoding="utf-8") as f:
+    with open(constants.TO_STUDY_FILE, "w", encoding="utf-8") as f:
         json.dump(to_study, f, ensure_ascii=False, indent=4)
     
-    with open("studied.json", "w", encoding="utf-8") as f:
+    with open(constants.STUDIED_FILE, "w", encoding="utf-8") as f:
         json.dump(studied, f, ensure_ascii=False, indent=4)
 
 
@@ -110,5 +112,17 @@ def get_choice():
 def pause():
     input()
 
+
+def print_list(data):
+
+    if len(data) == 0:
+        print("[]")
+    else:
+        res = ""
+
+        for el in data:
+            res += f"{str(el)}, "
+
+        print(res)
 
 main()
