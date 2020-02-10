@@ -4,21 +4,12 @@ import random
 
 # Custom Modules
 import constants
-from file_handler import (
-    check_for_missing_files,
-    generate_missing_files,
-    get_study_files,
-    validate_study_files
-)
+import file_handler
+import validator
 
 
 def main():
-    # Validate study files
-    missing_files = check_for_missing_files()
-    if len(missing_files) == 0:
-        validate_study_files()
-    elif len(missing_files) > 0:
-        generate_missing_files(missing_files)
+    validator.validate_study_files()
     
     to_study, studied = get_study_files()
     print("=== to_study ===")
