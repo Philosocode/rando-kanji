@@ -20,8 +20,10 @@ def get_study_files():
 
 def generate_missing_files(missing_files):
     if len(missing_files) == 1:
+        print(f"ERROR: Missing file: {missing_files[0]}. Regenerating...")
         _generate_missing_file(missing_files[0])
     else:
+        print("ERROR: Missing both files. Regenerating...")
         _create_study_files()
 
 
@@ -29,6 +31,7 @@ def save_files(to_study, studied):
     """ `to_study` and `studied` should be lists of indices """
     create_json_file(TO_STUDY_FILE, to_study)
     create_json_file(STUDIED_FILE, studied)
+    print("Files saved.")
 
 
 # PRIVATE
@@ -44,13 +47,7 @@ def _create_study_files():
     create_json_file(STUDIED_FILE, [])
 
 
-def _delete_file(file_name):
-    """ Delete a file (in same directory) """
-    os.remove(file_name)
-    print(f"DELETED: {file_name}.")
-
-
-def _generate_missing_file(missing_file_name):
+def generate_missing_file(missing_file_name):
     """ Use `to_study` file to generate `studied` (and vice versa) """
     
     # Approach: add all indices to `to_study` if they're not in `studied`
