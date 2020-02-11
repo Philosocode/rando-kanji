@@ -3,7 +3,7 @@ import json
 import random
 
 # Custom Modules
-import constants
+from constants import ( TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI )
 import file_handler
 import validator
 
@@ -11,7 +11,7 @@ import validator
 def main():
     validator.validate_study_files()
     
-    to_study, studied = get_study_files()
+    to_study, studied = file_handler.get_study_files()
     print("=== to_study ===")
     print_list(to_study)
     print("=== studied ===")
@@ -44,7 +44,7 @@ def main():
 def handle_show_remaining(studied):
     amount_studied = len(studied)
     print("\nStudied:", amount_studied)
-    print("Remaining:", constants.TOTAL_KANJI - amount_studied)
+    print("Remaining:", TOTAL_KANJI - amount_studied)
     pause()
 
 
@@ -67,17 +67,6 @@ def handle_get_kanji(to_study, studied):
             break
         else:
             print("Sorry, please try again.")
-
-
-def save(to_study, studied):
-    to_study.sort()
-    studied.sort()
-
-    with open(constants.TO_STUDY_FILE, "w", encoding="utf-8") as f:
-        json.dump(to_study, f, ensure_ascii=False, indent=4)
-    
-    with open(constants.STUDIED_FILE, "w", encoding="utf-8") as f:
-        json.dump(studied, f, ensure_ascii=False, indent=4)
 
 
 def print_intro_prompt():
