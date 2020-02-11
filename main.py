@@ -5,6 +5,7 @@ import random
 # Custom Modules
 from constants import ( TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI )
 import file_handler
+import io_handler
 import validator
 
 
@@ -12,97 +13,58 @@ def main():
     validator.validate_study_files()
     
     to_study, studied = file_handler.get_study_files()
-    print("=== to_study ===")
-    print_list(to_study)
-    print("=== studied ===")
-    print_list(studied)
-
-    return
-
-    edited = False
 
     while True:
-        print_intro_prompt()
-        choice = get_choice()
+        io_handler.print_intro_prompt()
+        choice = io_handler.get_choice()
+
+        # Get Kanji Index
+        if choice == "g":
+            handle_get_kanji(to_study, studied)
         
         # Get Remaining Count
         if choice == "c":
-            handle_show_remaining(studied)
-
-        # Get Kanji
-        if choice == "g":
-            handle_get_kanji(to_study, studied)
+            io_handler.print_remaining_kanji(studied)
 
         # Save and Quit
         if choice == "q":
-            if edited:
-                save(to_study, studied)
-            print("\nGoodbye =)")
-            exit(0)
-
-
-def handle_show_remaining(studied):
-    amount_studied = len(studied)
-    print("\nStudied:", amount_studied)
-    print("Remaining:", TOTAL_KANJI - amount_studied)
-    pause()
+            handle_quit()
 
 
 def handle_get_kanji(to_study, studied):
+    get_new_kanji = True
+
     while True:
-        random_index = random.choice(to_study)
-        print_get_kanji_prompt(random_index)
-        get_kanji_choice = input("> ").lower()[0]
+        # Select random EL/index from `to_study`
+        if get_new_kanji:
+            random_index = random.choice(to_study)
+            get_new_kanji = False
+
+        io_handler.print_get_kanji_prompt(random_index)
+        choice = io_handler.get_choice()
 
         # Add index to studied
-        if get_kanji_choice == "a":
+        if choice == "a":
             to_study.remove(random_index)
             studied.append(random_index)
-            save(to_study, studied)
-            edited = True
-        elif get_kanji_choice == "s":
+            file_handler.save_files(to_study, studied)
+            get_new_kanji = True
+
+        elif choice == "s":
+            get_new_kanji = True
             continue
-        elif get_kanji_choice == "q":
+
+        elif choice == "q":
             print()
-            break
+            return
+
         else:
-            print("Sorry, please try again.")
+            print(f"Sorry, {choice} is not a valid option. Please try again.")
 
 
-def print_intro_prompt():
-    print("=== MAIN MENU ===")
-    print("What do you want to do?")
-    print("    c) Get count of remaining kanji")
-    print("    r) Get a random kanji index")
-    print("    q) Quit")
+def handle_quit():
+    print("\nGoodbye =)")
+    exit(0)
 
-
-def print_get_kanji_prompt(kanji_index):
-    print("\n=== RANDO KANJI ===")
-    print(f"Kanji: {kanji_index}")
-    print("    a) Add to studied")
-    print("    s) Skip")
-    print("    q) Quit")
-
-
-def get_choice():
-    return input("> ").lower()[0]
-
-
-def pause():
-    input()
-
-
-def print_list(data):
-
-    if len(data) == 0:
-        print("[]")
-    else:
-        res = ""
-
-        for el in data:
-            res += f"{str(el)}, "
-
-        print(res)
 
 main()

@@ -24,11 +24,11 @@ def save_files(to_study, studied):
     to_study.sort()
     studied.sort()
 
-    save_file(TO_STUDY_FILE, to_study)
-    save_file(STUDIED_FILE, studied)
+    create_json_file(TO_STUDY_FILE, to_study)
+    create_json_file(STUDIED_FILE, studied)
 
 
-def save_file(file_name, data):
+def create_json_file(file_name, data):
     with open(file_name, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
         print(f"SAVED: {file_name}.")
@@ -43,8 +43,8 @@ def _create_kanji_indices():
 def _create_study_files():
     """ Create to_study & studied JSON files """
     kanji_indices = _create_kanji_indices()
-    _create_json_file(TO_STUDY_FILE, kanji_indices)
-    _create_json_file(STUDIED_FILE, [])
+    create_json_file(TO_STUDY_FILE, kanji_indices)
+    create_json_file(STUDIED_FILE, [])
 
 
 def _delete_file(file_name):
@@ -74,7 +74,7 @@ def _generate_missing_file(missing_file_name):
     indices_to_save = [n for n in all_indices if n not in existing_indices]
 
     # Create new file with missing indices
-    _create_json_file(missing_file_name, indices_to_save)
+    create_json_file(missing_file_name, indices_to_save)
 
     print(f"Re-created {missing_file_name}.")
 

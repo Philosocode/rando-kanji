@@ -12,7 +12,7 @@ def validate_study_files():
     missing_files = _get_missing_files()
 
     if len(missing_files) > 0:
-        generate_missing_files(missing_files)
+        file_handler.generate_missing_files(missing_files)
     
     # [to_study, studied]
     study_files = file_handler.get_study_files()
@@ -29,7 +29,7 @@ def validate_study_files():
         study_files[idx] = unique_indices
 
     to_study_set, studied_set = study_files
-    file_handler.save_file(TO_STUDY_FILE, list(to_study_set))
+    file_handler.create_json_file(TO_STUDY_FILE, list(to_study_set))
     
     # If sum of indices in both files doesn't equal TOTAL_KANJI, something is wrong
     if len(to_study_set) + len(studied_set) != TOTAL_KANJI:
@@ -43,7 +43,7 @@ def validate_study_files():
         if idx in studied_set:
             return file_handler.generate_missing_files([STUDIED_FILE])
     
-    file_handler.save_file(STUDIED_FILE, list(studied_set))
+    file_handler.create_json_file(STUDIED_FILE, list(studied_set))
 
 
 # PRIVATE
