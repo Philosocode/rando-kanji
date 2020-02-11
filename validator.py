@@ -29,11 +29,11 @@ def validate_study_files():
         study_files[idx] = unique_indices
 
     to_study_set, studied_set = study_files
-
+    file_handler.save_file(TO_STUDY_FILE, list(to_study_set))
+    
     # If sum of indices in both files doesn't equal TOTAL_KANJI, something is wrong
     if len(to_study_set) + len(studied_set) != TOTAL_KANJI:
         # Regenerate files using `to_study` indices
-        file_handler.save_file(TO_STUDY_FILE, list(to_study_set))
         return file_handler.generate_missing_files([STUDIED_FILE])
     
     # Unique indices for both files should add up to TOTAL_KANJI
@@ -41,10 +41,9 @@ def validate_study_files():
     for idx in to_study_set:
         # If duplicate is present, re-generate files using `to_study` indices
         if idx in studied_set:
-            file_handler.save_file(TO_STUDY_FILE, list(to_study_set))
             return file_handler.generate_missing_files([STUDIED_FILE])
     
-    file_handler.save_files(list(to_study_set), list(studied_set))
+    file_handler.save_file(STUDIED_FILE, list(studied_set))
 
 
 # PRIVATE
