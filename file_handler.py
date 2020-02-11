@@ -5,6 +5,12 @@ from constants import ( TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI )
 
 
 # PUBLIC
+def create_json_file(file_name, data):
+    with open(file_name, "w", encoding="utf-8") as f:
+        json.dump(sorted(data), f, ensure_ascii=False, indent=4)
+        print(f"SAVED: {file_name}.")
+
+
 def get_study_files():
     to_study = _load_json_file(TO_STUDY_FILE)
     studied = _load_json_file(STUDIED_FILE)
@@ -21,14 +27,8 @@ def generate_missing_files(missing_files):
 
 def save_files(to_study, studied):
     """ `to_study` and `studied` should be lists of indices """
-    create_json_file(TO_STUDY_FILE, sorted(to_study))
-    create_json_file(STUDIED_FILE, sorted(studied))
-
-
-def create_json_file(file_name, data):
-    with open(file_name, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
-        print(f"SAVED: {file_name}.")
+    create_json_file(TO_STUDY_FILE, to_study)
+    create_json_file(STUDIED_FILE, studied)
 
 
 # PRIVATE
