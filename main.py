@@ -30,6 +30,9 @@ def main():
         if choice == "q":
             handle_quit()
 
+        else:
+            handle_invalid_choice()
+
 
 def handle_get_kanji(to_study, studied):
     get_new_kanji = True
@@ -66,5 +69,8 @@ def handle_quit():
     print("\nGoodbye =)")
     exit(0)
 
+
+def handle_invalid_choice():
+    input("ERROR: Choice not recognized. Please try again.")
 
 main()
