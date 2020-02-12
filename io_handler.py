@@ -21,7 +21,7 @@ def print_get_kanji_prompt(kanji_index):
 def print_intro_prompt():
     print("\n=== MAIN MENU ===")
     print("What do you want to do?")
-    print("    g) Get a random kanji index")
+    print("    r) Get a random kanji index")
     print("    c) Get count of remaining kanji")
     print("    q) Quit")
 

@@ -19,7 +19,7 @@ def main():
         choice = io_handler.get_choice()
 
         # Get Kanji Index
-        if choice == "g":
+        if choice == "r":
             handle_get_kanji(to_study, studied)
         
         # Get Remaining Count
