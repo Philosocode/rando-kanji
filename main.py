@@ -23,11 +23,11 @@ def main():
             handle_get_kanji(to_study, studied)
         
         # Get Remaining Count
-        if choice == "c":
+        elif choice == "c":
             io_handler.print_remaining_kanji(studied)
 
         # Save and Quit
-        if choice == "q":
+        elif choice == "q":
             handle_quit()
 
         else:
@@ -58,7 +58,6 @@ def handle_get_kanji(to_study, studied):
             continue
 
         elif choice == "q":
-            print()
             return
 
         else:
