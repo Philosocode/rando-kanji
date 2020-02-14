@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import json
 import random
+import pyperclip
 
 # Custom Modules
 from constants import ( TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI )
@@ -41,6 +42,7 @@ def handle_get_kanji(to_study, studied):
         # Select random EL/index from `to_study`
         if get_new_kanji:
             random_index = random.choice(to_study)
+            pyperclip.copy(random_index)
             get_new_kanji = False
 
         io_handler.print_get_kanji_prompt(random_index)
