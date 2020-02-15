@@ -46,8 +46,9 @@ def handle_get_kanji(to_study, studied, kanji_dict):
             pyperclip.copy(random_index)
             get_new_kanji = False
         
-        kanji = kanji_dict[random_index]
-        io_handler.print_get_kanji_prompt(kanji, random_index)
+        [kanji, meaning] = kanji_dict[random_index]
+
+        io_handler.print_get_kanji_prompt(random_index, kanji, meaning)
         choice = io_handler.get_choice()
 
         # Add index to studied

@@ -21,6 +21,7 @@ def get_study_files():
 
 
 def get_kanji_dict():
+    """ index => [kanji, meaning]  """
     if not _file_exists(KANJI_DICT_FILE):
         print("Creating kanji dict.")
         _create_kanji_dict()
@@ -56,8 +57,11 @@ def _create_kanji_dict():
 
     for line in kanji_lines:
         split_line = line.split(":")
-        kanji_idx, kanji, *rest = split_line
-        kanji_dict[int(kanji_idx)] = kanji
+        kanji_idx = split_line[0]
+        kanji = split_line[1]
+        meaning = split_line[4]
+
+        kanji_dict[int(kanji_idx)] = [kanji, meaning]
     
     _create_pickle_file(KANJI_DICT_FILE, kanji_dict)
 
