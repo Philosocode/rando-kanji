@@ -1,13 +1,15 @@
 #!/usr/bin/python
 import json
 import os
-from constants import ( TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI )
+import pickle
+
+from constants import ( TO_STUDY_FILE, STUDIED_FILE, KANJI_DATA_FILE, KANJI_DICT_FILE, TOTAL_KANJI )
 
 
 # PUBLIC
 def create_json_file(file_name, data):
     with open(file_name, "w", encoding="utf-8") as f:
-        json.dump(sorted(data), f, ensure_ascii=False, indent=4)
+        json.dump(data, f, ensure_ascii=False, indent=4)
         print(f"SAVED: {file_name}.")
 
 
@@ -18,11 +20,19 @@ def get_study_files():
     return [to_study, studied]
 
 
+def get_kanji_dict():
+    if not _file_exists(KANJI_DICT_FILE):
+        print("Creating kanji dict.")
+        _create_kanji_dict()
+    
+    return _load_pickle_file(KANJI_DICT_FILE)
+
+
 def generate_missing_files(missing_files):
     if len(missing_files) == 1:
         print(f"ERROR: Missing file: {missing_files[0]}. Regenerating...")
         _generate_missing_file(missing_files[0])
-    else:
+    elif len(missing_files) >= 2:
         print("ERROR: Missing both files. Regenerating...")
         _create_study_files()
 
@@ -40,6 +50,23 @@ def _create_kanji_indices():
     return list(range(1, TOTAL_KANJI + 1))
 
 
+def _create_kanji_dict():
+    kanji_lines = _get_lines_from_file(KANJI_DATA_FILE)
+    kanji_dict = {}
+
+    for line in kanji_lines:
+        split_line = line.split(":")
+        kanji_idx, kanji, *rest = split_line
+        kanji_dict[int(kanji_idx)] = kanji
+    
+    _create_pickle_file(KANJI_DICT_FILE, kanji_dict)
+
+
+def _create_pickle_file(file_name, data):
+    with open(file_name, 'wb') as f:
+        pickle.dump(data, f)
+
+
 def _create_study_files():
     """ Create to_study & studied JSON files """
     kanji_indices = _create_kanji_indices()
@@ -47,7 +74,22 @@ def _create_study_files():
     create_json_file(STUDIED_FILE, [])
 
 
-def generate_missing_file(missing_file_name):
+def _file_exists(file_name):
+    try:
+        f = open(file_name)
+        f.close()
+    except FileNotFoundError:
+        return False
+
+    return True
+
+
+def _get_lines_from_file(file_name):
+    with open(file_name, "r") as f:
+        return [line.rstrip("\n") for line in f]
+
+
+def _generate_missing_file(missing_file_name):
     """ Use `to_study` file to generate `studied` (and vice versa) """
     
     # Approach: add all indices to `to_study` if they're not in `studied`
@@ -73,6 +115,23 @@ def generate_missing_file(missing_file_name):
     print(f"Re-created {missing_file_name}.")
 
 
+def _get_missing_study_files():
+    """ Check if study files exist. Return a List containing the names of the files that don't exist """
+    not_found_files = []
+
+    for file_name in [TO_STUDY_FILE, STUDIED_FILE]:
+        if not _file_exists(file_name):
+            not_found_files.append(file_name)
+
+    return not_found_files
+
+
 def _load_json_file(file_name):
     with open(file_name, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def _load_pickle_file(file_name):
+    with open(file_name, "rb") as f:
+        data = pickle.load(f)
+        return data

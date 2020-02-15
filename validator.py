@@ -9,7 +9,7 @@ def validate_study_files():
     """ Ensure `to_study` and `studied` files are valid """
 
     # 1. Check for missing files. If so, re-create them before continuing
-    missing_files = _get_missing_files()
+    missing_files = file_handler._get_missing_study_files()
     if len(missing_files) > 0:
         file_handler.generate_missing_files(missing_files)
     
@@ -45,31 +45,3 @@ def validate_study_files():
 
 
 # PRIVATE
-def _get_missing_files():
-    """ Check if study files exist. Return a List containing the names of the files that don't exist """
-    not_found_files = []
-
-    for file_name in [TO_STUDY_FILE, STUDIED_FILE]:
-        try:
-            f = open(file_name)
-            f.close()
-        except FileNotFoundError:
-            not_found_files.append(file_name)
-
-    return not_found_files
-
-
-def _has_out_of_range_indices(indices):
-    """ Check if indices are less than 0 or greater than `TOTAL_KANJI` """
-
-    for idx in indices:
-        if idx < 0 or idx > TOTAL_KANJI:
-            return True
-    
-    return False
-
-
-def _has_unique_indices(indices):
-    unique_indices = list(set(indices))
-    
-    return len(indices) == len(unique_indices)

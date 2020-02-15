@@ -14,6 +14,7 @@ def main():
     validator.validate_study_files()
     
     to_study, studied = file_handler.get_study_files()
+    kanji_dict = file_handler.get_kanji_dict()
 
     while True:
         io_handler.print_intro_prompt()
@@ -21,7 +22,7 @@ def main():
 
         # Get Kanji Index
         if choice == "r":
-            handle_get_kanji(to_study, studied)
+            handle_get_kanji(to_study, studied, kanji_dict)
         
         # Get Remaining Count
         elif choice == "c":
@@ -35,7 +36,7 @@ def main():
             handle_invalid_choice()
 
 
-def handle_get_kanji(to_study, studied):
+def handle_get_kanji(to_study, studied, kanji_dict):
     get_new_kanji = True
 
     while True:
@@ -44,8 +45,9 @@ def handle_get_kanji(to_study, studied):
             random_index = random.choice(to_study)
             pyperclip.copy(random_index)
             get_new_kanji = False
-
-        io_handler.print_get_kanji_prompt(random_index)
+        
+        kanji = kanji_dict[random_index]
+        io_handler.print_get_kanji_prompt(kanji, random_index)
         choice = io_handler.get_choice()
 
         # Add index to studied
@@ -73,5 +75,6 @@ def handle_quit():
 
 def handle_invalid_choice():
     input("ERROR: Choice not recognized. Please try again.")
+
 
 main()

@@ -10,9 +10,9 @@ def pause():
     input()
 
 
-def print_get_kanji_prompt(kanji_index):
+def print_get_kanji_prompt(kanji, kanji_index):
     print("\n=== RANDO KANJI ===")
-    print(f"Kanji: {kanji_index}")
+    print(f"Kanji: {kanji} [{kanji_index}]")
     print("    a) Add to studied")
     print("    s) Skip")
     print("    q) Quit")
