@@ -12,7 +12,7 @@ def pause():
 
 def print_get_kanji_prompt(index, kanji, meaning):
     print("\n=== RANDO KANJI ===")
-    print(f"[{index}] {kanji} {meaning}")
+    print(f'[{index}] {kanji} "{meaning}"')
     print("    a) Add to studied")
     print("    s) Skip")
     print("    q) Quit")
