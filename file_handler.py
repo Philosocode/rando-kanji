@@ -57,11 +57,9 @@ def _create_kanji_dict():
 
     for line in kanji_lines:
         split_line = line.split(":")
-        kanji_idx = split_line[0]
-        kanji = split_line[1]
-        meaning = split_line[4]
+        idx, kanji, meaning, *rest = split_line
 
-        kanji_dict[int(kanji_idx)] = [kanji, meaning]
+        kanji_dict[int(idx)] = [kanji, meaning]
     
     _create_pickle_file(KANJI_DICT_FILE, kanji_dict)
 
