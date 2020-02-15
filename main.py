@@ -7,14 +7,12 @@ import pyperclip
 from constants import ( TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI )
 import file_handler
 import io_handler
-import validator
 
 
 def main():
-    validator.validate_study_files()
-    
-    to_study, studied = file_handler.get_study_files()
+    # [kanji] => [idx, meaning]
     kanji_dict = file_handler.get_kanji_dict()
+    to_study, studied = generate_study_sets(kanji_dict)
 
     while True:
         io_handler.print_intro_prompt()
@@ -22,21 +20,28 @@ def main():
 
         # Get Kanji Index
         if choice == "r":
-            handle_get_kanji(to_study, studied, kanji_dict)
+            handle_get_kanji(kanji_dict)
         
         # Get Remaining Count
         elif choice == "c":
-            io_handler.print_remaining_kanji(studied)
+            handle_get_remaining_kanji()
 
         # Save and Quit
         elif choice == "q":
             handle_quit()
 
         else:
-            handle_invalid_choice()
+            handle_invalid_choice(choice)
 
 
-def handle_get_kanji(to_study, studied, kanji_dict):
+def generate_study_sets(kanji_dict):
+    to_study = set()
+    studied = set()
+
+    return [to_study, studied]
+
+
+def handle_get_kanji(kanji_dict):
     get_new_kanji = True
 
     while True:
@@ -66,16 +71,20 @@ def handle_get_kanji(to_study, studied, kanji_dict):
             return
 
         else:
-            print(f"Sorry, {choice} is not a valid option. Please try again.")
+            handle_invalid_choice(choice)
+
+
+def handle_get_remaining_kanji():
+    io_handler.print_remaining_kanji(studied)
+
+
+def handle_invalid_choice(choice):
+    input(f'ERROR: Choice "{choice}" not recognized. Please try again.')
 
 
 def handle_quit():
     print("\nGoodbye =)")
     exit(0)
-
-
-def handle_invalid_choice():
-    input("ERROR: Choice not recognized. Please try again.")
 
 
 main()
