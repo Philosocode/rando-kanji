@@ -40,8 +40,8 @@ def generate_missing_files(missing_files):
 
 def save_files(to_study, studied):
     """ `to_study` and `studied` should be lists of indices """
-    create_json_file(TO_STUDY_FILE, to_study)
-    create_json_file(STUDIED_FILE, studied)
+    create_json_file(TO_STUDY_FILE, sorted(to_study))
+    create_json_file(STUDIED_FILE, sorted(studied))
     print("Files saved.")
 
 
