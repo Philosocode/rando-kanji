@@ -12,17 +12,6 @@ import validator
 
 
 def main():
-    """
-    [
-        studied: Set, 
-        to_study: Set, 
-        dict: [kanji] => { 
-            meaning: string,
-            idx: string,
-            studied: bool
-        }
-    ]
-    """
     validator.validate_data_file()
     kanji_manager = get_kanji_manager()
 
@@ -44,6 +33,17 @@ def main():
 
 
 def get_kanji_manager():
+    """
+    [
+        studied: Set, 
+        to_study: Set, 
+        dict: [kanji] => { 
+            meaning: string,
+            idx: string,
+            studied: bool
+        }
+    ]
+    """
     # [kanji] => [idx, meaning]
     kanji_dict = file_handler.get_kanji_dict()
     
