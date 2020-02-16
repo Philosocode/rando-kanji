@@ -8,6 +8,7 @@ from KanjiManager import KanjiManager
 from constants import ( TOTAL_KANJI )
 import file_handler
 import io_handler
+import validator
 
 
 def main():
@@ -22,6 +23,7 @@ def main():
         }
     ]
     """
+    validator.validate_data_file()
     kanji_manager = get_kanji_manager()
 
     while True:

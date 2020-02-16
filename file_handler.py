@@ -7,21 +7,7 @@ from constants import *
 
 
 # PUBLIC
-def get_kanji_dict():
-    if not _file_exists(KANJI_DICT_FILE):
-        print("Kanji data not found. Creating kanji dict.")
-        _create_kanji_dict()
-    
-    return _load_json_file(KANJI_DICT_FILE)
-
-
-def save(kanji_dict):
-    _create_json_file(KANJI_DICT_FILE, kanji_dict)
-    print("Data saved.")
-
-
-# PRIVATE
-def _create_kanji_dict():
+def create_kanji_dict():
     kanji_lines = _get_lines_from_file(KANJI_DATA_FILE)
     kanji_dict = {}
 
@@ -35,9 +21,24 @@ def _create_kanji_dict():
             "studied": False 
         }
     
+    return kanji_dict
+
+
+def get_kanji_dict():
+    if not _file_exists(KANJI_DICT_FILE):
+        print("Kanji data not found. Creating kanji dict.")
+        kanji_dict = create_kanji_dict()
+        save(kanji_dict)
+    
+    return _load_json_file(KANJI_DICT_FILE)
+
+
+def save(kanji_dict):
     _create_json_file(KANJI_DICT_FILE, kanji_dict)
+    print("Data saved.")
 
 
+# PRIVATE
 def _file_exists(file_name):
     try:
         f = open(file_name)
