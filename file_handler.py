@@ -8,7 +8,6 @@ from constants import *
 
 # PUBLIC
 def get_kanji_dict():
-    """ index => [kanji, meaning]  """
     if not _file_exists(KANJI_DICT_FILE):
         print("Kanji data not found. Creating kanji dict.")
         _create_kanji_dict()
