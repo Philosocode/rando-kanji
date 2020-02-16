@@ -1,6 +1,6 @@
 studied.json
 to_study.json
-kanji_dict.pickle
+kanji_dict.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

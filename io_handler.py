@@ -27,7 +27,6 @@ def print_intro_prompt():
 
 
 def print_remaining_kanji(studied):
-    amount_studied = len(studied)
-    print("\nStudied:", amount_studied)
-    print("Remaining:", TOTAL_KANJI - amount_studied)
+    print("\nStudied:", studied)
+    print("Remaining:", TOTAL_KANJI - studied)
     pause()

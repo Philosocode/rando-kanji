@@ -1,47 +1,39 @@
 #!/usr/bin/python
-from constants import ( TOTAL_KANJI, TO_STUDY_FILE, STUDIED_FILE )
+from constants import ( TOTAL_KANJI )
 
 import file_handler
 
 
-# PUBLIC
-def validate_study_files():
-    """ Ensure `to_study` and `studied` files are valid """
+def validate_data_file():
+    # Create valid "master" file to validate against
+    valid_dict = file_handler.create_kanji_dict()
+    to_check = file_handler.get_kanji_dict()
+    is_valid = True
 
-    # 1. Check for missing files. If so, re-create them before continuing
-    missing_files = file_handler._get_missing_study_files()
-    if len(missing_files) > 0:
-        file_handler.generate_missing_files(missing_files)
+    for kanji in valid_dict:
+        # Make sure `to_check` contains all the kanji
+        # If not, add it to `to_check`
+        if kanji not in to_check:
+            print(f"Missing kanji from data file: {kanji}.")
+            to_check[kanji] = valid_dict[kanji]
+            is_valid = False
+        # Make sure indices match
+        # If not, update index in `to_check`
+        to_check_index = to_check[kanji]["index"]
+        valid_index = valid_dict[kanji]["index"]
+        if to_check_index != valid_index:
+            print(f"{kanji}: updating index from {to_check_index} to {valid_index}.")
+            to_check[kanji["index"]] = valid_dict[kanji]["index"]
+            is_valid = False
+        
+        # Make sure meanings match
+        # If not, update index in `to_check`
+        to_check_meaning = to_check[kanji]["meaning"]
+        valid_meaning = valid_dict[kanji]["meaning"]
+        if to_check_meaning != valid_meaning:
+            print(f"{kanji}: updating meaning from {to_check_meaning} to {valid_meaning}.")
+            to_check[kanji["meaning"]] = valid_dict[kanji]["meaning"]
+            is_valid = False
     
-    # [to_study, studied]
-    study_files = file_handler.get_study_files()
-
-    # Clean the indices: remove out-of-range indices and duplicates
-    for idx, indices in enumerate(study_files):
-        # 2. Remove out-of-range indices
-        filtered_indices = filter(lambda x: x > 0 and x <= TOTAL_KANJI, indices)
-
-        # 3. Remove duplicate indices within the same file
-        unique_indices = set(filtered_indices)
-
-        # Store updated indices in `study_files` tuple
-        study_files[idx] = unique_indices
-
-    to_study_set, studied_set = study_files
-    file_handler.create_json_file(TO_STUDY_FILE, list(to_study_set))
-    # If sum of indices in both files doesn't equal TOTAL_KANJI, something is wrong
-    if len(to_study_set) + len(studied_set) != TOTAL_KANJI:
-        # Regenerate files using `to_study` indices
-        return file_handler.generate_missing_files([STUDIED_FILE])
-    
-    # Unique indices for both files should add up to TOTAL_KANJI
-    # Make sure there are no duplicates (index present in both files)
-    for idx in to_study_set:
-        # If duplicate is present, re-generate files using `to_study` indices
-        if idx in studied_set:
-            return file_handler.generate_missing_files([STUDIED_FILE])
-    
-    file_handler.create_json_file(STUDIED_FILE, list(studied_set))
-
-
-# PRIVATE
+    if is_valid:
+        print("Data file validated. No errors found.")
