@@ -5,7 +5,7 @@ import pyperclip
 from KanjiManager import KanjiManager
 
 # Custom Modules
-from constants import ( TO_STUDY_FILE, STUDIED_FILE, TOTAL_KANJI )
+from constants import ( TOTAL_KANJI )
 import file_handler
 import io_handler
 
@@ -28,15 +28,12 @@ def main():
         io_handler.print_intro_prompt()
         choice = io_handler.get_choice()
 
-        # Get Kanji Index
         if choice == "r":
             handle_get_kanji(kanji_manager)
         
-        # Get Remaining Count
         elif choice == "c":
             handle_get_remaining_kanji(kanji_manager)
 
-        # Save and Quit
         elif choice == "q":
             handle_quit()
 
@@ -62,13 +59,17 @@ def get_kanji_manager():
     return KanjiManager(to_study, studied, kanji_dict)
 
 
+def get_random_kanji(kanji_set):
+    # https://stackoverflow.com/a/24949742
+    return random.choice(tuple(kanji_set))
+    
+
 def handle_get_kanji(kanji_manager):
     get_new_kanji = True
 
     [to_study, studied, kanji_dict] = kanji_manager
 
     while True:
-        # Select random EL/index from `to_study`
         if get_new_kanji:
             kanji = get_random_kanji(to_study)
             pyperclip.copy(kanji)
@@ -76,32 +77,32 @@ def handle_get_kanji(kanji_manager):
         
         index = kanji_dict[kanji]["index"]
         meaning = kanji_dict[kanji]["meaning"]
-
+        
         io_handler.print_get_kanji_prompt(index, kanji, meaning)
         choice = io_handler.get_choice()
 
-        # Add index to studied
-        if choice == "a":
-            kanji_dict[kanji]["studied"] = True
-            to_study.remove(kanji)
-            studied.add(kanji)
-            file_handler.save(kanji_dict)
+        if choice == "q":
+            return
+        
+        elif choice == "a":
+            handle_add_kanji(kanji_manager, kanji)
             get_new_kanji = True
 
         elif choice == "s":
             get_new_kanji = True
-            continue
-
-        elif choice == "q":
-            return
 
         else:
             handle_invalid_choice(choice)
 
 
-def get_random_kanji(kanji_set):
-    # https://stackoverflow.com/a/24949742
-    return random.choice(tuple(kanji_set))
+def handle_add_kanji(kanji_manager, kanji):
+    [to_study, studied, kanji_dict] = kanji_manager
+
+    kanji_dict[kanji]["studied"] = True
+    file_handler.save(kanji_dict)
+
+    to_study.remove(kanji)
+    studied.add(kanji)
 
 
 def handle_get_remaining_kanji(kanji_manager):
