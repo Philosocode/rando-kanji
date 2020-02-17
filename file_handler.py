@@ -3,7 +3,7 @@ import json
 import os
 import pickle
 
-from constants import *
+from constants import ( KANJI_DATA_FILE, KANJI_DICT_FILE )
 
 
 # PUBLIC
@@ -57,7 +57,6 @@ def _get_lines_from_file(file_name):
 def _create_json_file(file_name, data):
     with open(file_name, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
-        print(f"SAVED: {file_name}.")
 
 
 def _load_json_file(file_name):
