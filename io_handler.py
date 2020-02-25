@@ -3,6 +3,10 @@ from constants import ( TOTAL_KANJI )
 
 
 def get_choice():
+    input = input.strip()
+    if len(input) == 0: 
+        return "?"
+
     return input("> ").lower()[0]
 
 
