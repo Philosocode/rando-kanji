@@ -3,11 +3,13 @@ from constants import ( TOTAL_KANJI )
 
 
 def get_choice():
-    input = input.strip()
-    if len(input) == 0: 
-        return "?"
+    choice = input("> ").lower()
+    choice = choice.strip()
 
-    return input("> ").lower()[0]
+    if len(choice) == 0: 
+        return " "
+
+    return choice[0]
 
 
 def pause():
