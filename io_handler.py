@@ -12,27 +12,20 @@ def get_choice():
     return choice[0]
 
 
-def pause():
-    input()
+def pause(message = ""):
+    input(message)
 
 
-def print_get_kanji_prompt(index, kanji, meaning):
-    print("\n=== RANDO KANJI ===")
-    print(f'[{index}] {kanji} "{meaning}"')
+def print_intro_prompt(index, kanji, meaning):
+    print(f'\n[{index}] {kanji} "{meaning}"')
     print("    a) Add to studied")
-    print("    s) Skip")
-    print("    q) Quit")
+    print("    s) Skip\n")
 
-
-def print_intro_prompt():
-    print("\n=== MAIN MENU ===")
-    print("What do you want to do?")
-    print("    r) Get a random kanji")
-    print("    c) Get count of remaining kanji")
+    print("    c) Copy kanji to clipboard")
+    print("    r) Get remaining number of kanji")
     print("    q) Quit")
 
 
 def print_remaining_kanji(studied):
     print("\nStudied:", studied)
-    print("Remaining:", TOTAL_KANJI - studied)
-    pause()
+    pause(f"Remaining: {TOTAL_KANJI - studied}")

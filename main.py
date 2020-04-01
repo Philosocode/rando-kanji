@@ -16,17 +16,41 @@ def main():
     kanji_manager = get_kanji_manager()
 
     while True:
-        io_handler.print_intro_prompt()
+        handle_get_kanji(kanji_manager)
+
+def handle_get_kanji(kanji_manager):
+    get_new_kanji = True
+
+    [to_study, studied, kanji_dict] = kanji_manager
+
+    while True:
+        if get_new_kanji:
+            kanji = get_random_kanji(to_study)
+            pyperclip.copy(kanji)
+            get_new_kanji = False
+        
+        index = kanji_dict[kanji]["index"]
+        meaning = kanji_dict[kanji]["meaning"]
+        
+        io_handler.print_intro_prompt(index, kanji, meaning)
         choice = io_handler.get_choice()
 
-        if choice == "r":
-            handle_get_kanji(kanji_manager)
+        if choice == "q":
+            handle_quit()
+        
+        elif choice == "a":
+            handle_add_kanji(kanji_manager, kanji)
+            get_new_kanji = True
         
         elif choice == "c":
-            handle_get_remaining_kanji(kanji_manager)
+            pyperclip.copy(kanji)
+            io_handler.pause(f"Copied {kanji} to clipboard.")
 
-        elif choice == "q":
-            handle_quit()
+        elif choice == "s":
+            get_new_kanji = True
+        
+        elif choice == "r":
+            handle_get_remaining_kanji(kanji_manager)
 
         else:
             handle_invalid_choice(choice)
@@ -64,37 +88,6 @@ def get_kanji_manager():
 def get_random_kanji(kanji_set):
     # https://stackoverflow.com/a/24949742
     return random.choice(tuple(kanji_set))
-    
-
-def handle_get_kanji(kanji_manager):
-    get_new_kanji = True
-
-    [to_study, studied, kanji_dict] = kanji_manager
-
-    while True:
-        if get_new_kanji:
-            kanji = get_random_kanji(to_study)
-            pyperclip.copy(kanji)
-            get_new_kanji = False
-        
-        index = kanji_dict[kanji]["index"]
-        meaning = kanji_dict[kanji]["meaning"]
-        
-        io_handler.print_get_kanji_prompt(index, kanji, meaning)
-        choice = io_handler.get_choice()
-
-        if choice == "q":
-            return
-        
-        elif choice == "a":
-            handle_add_kanji(kanji_manager, kanji)
-            get_new_kanji = True
-
-        elif choice == "s":
-            get_new_kanji = True
-
-        else:
-            handle_invalid_choice(choice)
 
 
 def handle_add_kanji(kanji_manager, kanji):
