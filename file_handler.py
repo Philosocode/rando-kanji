@@ -18,7 +18,8 @@ def create_kanji_dict():
         kanji_dict[kanji] = { 
             "index": int(idx), 
             "meaning": meaning, 
-            "studied": False 
+            "studied": False,
+            "skipped": False
         }
     
     return kanji_dict

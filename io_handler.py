@@ -19,13 +19,15 @@ def pause(message = ""):
 def print_intro_prompt(index, kanji, meaning):
     print(f'\n[{index}] {kanji} "{meaning}"')
     print("    a) Add to studied")
-    print("    s) Skip\n")
+    print("    n) Next\n")
 
     print("    c) Copy kanji to clipboard")
+    print("    s) Skip kanji")
     print("    r) Get remaining number of kanji")
     print("    q) Quit")
 
 
-def print_remaining_kanji(studied):
+def print_remaining_kanji(studied, skipped):
     print("\nStudied:", studied)
-    pause(f"Remaining: {TOTAL_KANJI - studied}")
+    print(f"Remaining: {TOTAL_KANJI - studied - skipped}")
+    print(f"Skipped: {skipped}")

@@ -41,13 +41,20 @@ def handle_get_kanji(kanji_manager):
         elif choice == "a":
             handle_add_kanji(kanji_manager, kanji)
             get_new_kanji = True
+
+        elif choice == "n":
+            get_new_kanji = True
         
         elif choice == "c":
             pyperclip.copy(kanji)
             io_handler.pause(f"Copied {kanji} to clipboard.")
 
         elif choice == "s":
-            get_new_kanji = True
+            print("Are you sure? (y for yes)")
+            confirmation = io_handler.get_choice()
+            if confirmation == "y":
+                skipped = handle_skip_kanji(kanji_manager, kanji)
+                get_new_kanji = True
         
         elif choice == "r":
             handle_get_remaining_kanji(kanji_manager)
@@ -64,7 +71,8 @@ def get_kanji_manager():
         dict: [kanji] => { 
             meaning: string,
             idx: string,
-            studied: bool
+            studied: bool,
+            skipped: bool,
         }
     ]
     """
@@ -85,6 +93,16 @@ def get_kanji_manager():
     return KanjiManager(to_study, studied, kanji_dict)
 
 
+def get_skipped_count(kanji_dict):
+    num_skipped = 0
+
+    for kanji in kanji_dict:
+        if kanji_dict[kanji]["skipped"]:
+            num_skipped += 1
+    
+    return num_skipped
+
+
 def get_random_kanji(kanji_set):
     # https://stackoverflow.com/a/24949742
     return random.choice(tuple(kanji_set))
@@ -100,9 +118,23 @@ def handle_add_kanji(kanji_manager, kanji):
     studied.add(kanji)
 
 
+def handle_skip_kanji(kanji_manager, kanji):
+    to_study = kanji_manager.to_study
+    kanji_dict = kanji_manager.kanji_dict
+
+    kanji_dict[kanji]["skipped"] = True
+    file_handler.save(kanji_dict)
+
+    to_study.remove(kanji)
+
+
 def handle_get_remaining_kanji(kanji_manager):
-    remaining_kanji = len(kanji_manager.studied)
-    io_handler.print_remaining_kanji(remaining_kanji)
+    kanji_dict = kanji_manager.kanji_dict
+
+    num_remaining = len(kanji_manager.studied)
+    num_skipped = get_skipped_count(kanji_dict)
+    
+    io_handler.print_remaining_kanji(num_remaining, num_skipped)
 
 
 def handle_invalid_choice(choice):
